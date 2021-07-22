@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Books.hpp"
 
 using namespace std;
 /*
@@ -13,7 +14,7 @@ using namespace std;
  * When a customer wants a book, the sales person inputs the title and author 
  * The code searches and displays if the book is available or not...
  *If it is not available, an appropriate message is displayed...
- * If it is, and the required copies are vailable
+ * If it is, and the required copies are available
  * 
  * Use a class called books with suitable member functions and constructors
  * Also look at the possibility of using the new operator to create spaces for the books and deleting them when due.
@@ -43,8 +44,46 @@ using namespace std;
                  * The Total Price of all the copies that are to be purchased...
      4.     ADD REVIEWS OF THE BOOKS. (If the book is available then add the review)>>>>>>>>>>>
      5.     QUIT 
+      * 
+      * 
+      *                                                             HOW TO GO ABOUT THE PROGRAM
+      * 
+      * Use class called books with suitable member functions and constructors
+      * 
+      * STEPS
+      * 1. Create The class called Books
+      * ##Header FIle
+      * attributes to be in Private:
+      * The things in Private will be in form of vectors...
+ *  Author
+ * Title
+ * Price
+ * Publisher
+ * Stock Position..
+      * Method Prototypes to be included in Public....
+      * Functions:
+      * These functions and methods will be making use of the attributes in the private since they are members of the class...
+      *     1. Add books
+      *     2. Get List of all Books available
+      *     3. Add Review
+      *     4. Then The constructor That looks for a book............
+      * 
+      * ##Cpp File
+      * Functions to be elaborated on in the Cpp file
+      * 
+      * 
+      * ##Main
+      * 
+      * 
  * */
+ 
+
+ 
 int main() {
-    std::cout<<"My Template"<<std::endl;
+        Books lakeside;
+        cout<<"\t\t\t==============WELCOME TO LAKESIDE BOOKSHOP==============="<<endl;
+       lakeside.display_menu();
+        
+
     return 0;
 }

@@ -13,21 +13,26 @@ class Books
 {
 private: 
 //The attributes are being defined and initialised Here
-    vector<std::string> title{" "};
-    vector<std::string> author{" "};
-    vector<int> copies {0};
-    vector<double>price {0.00};
-    vector<int> position{0};
+    std::vector<std::string> title{" "};
+    std::vector<std::string> author{" "};
+    std::vector<int> copies {0};
+    std::vector<double>price {0.00};
+    std::vector<int> position{0};
+    std::vector<std::string> publisher{" "};
+    int total_num{0};
+//    char option {};
+      int quited {0};
     
 public:
+    void display_menu();
     void list_books();
     void add_books();
     void search_books();
     void review_books();
+    int quit();
+    void rerun(int &quited);
+  
 };
-
-
-
 #endif // _BOOKS_H_
 
 

@@ -1,32 +1,153 @@
 #include "Books.hpp"
+#include <stdio.h>
+#include <iostream>
+#include <string>
 
+using namespace std;
 //      * list_books
 //      * add_books 
 //      * Search_books
 //      * review_books
-    
-    void Books:: list_books(){
-        
-    }
-    
-    void Books :: add_books(){
-        int num{0};
-        cout<<"How many books will you like to add:  ";
-        cin>>num;
-        cout<<endl;
-        //The first for loop enables the user the opportunity of 10 inputs...
-        for(int i {0}; i < num; i++){
-            
+char option {};
+
+   void Books::display_menu(){
+        cout<<"a -- Add Books\nl -- Get List of books in stock\ns -- Search for a book\nr -- Add a review to a book\nq -- Quit Application\n";
+        cin>>option;
+        if (option != 'q'){
+            switch (option){
+                
+                case 'l':
+                {
+                    list_books();
+                    
+                }
+                break;
+                
+                case 'a':
+                {
+                    add_books();
+                }
+                break;
+                
+                case 's':
+                {
+                    search_books();
+                }
+                break;
+                case 'r':
+                {
+                    cout<<"Relax, we are working on that feature... "<<endl;
+                }
+                break;
+                
+//                case 'q':
+//                {
+//                    quit();
+//                }
+//                break;
+
+                default:
+                {
+                    cout<<"Please enter a valid option (In lower case)"<<endl;
+                }
+            }
+        }
+        else{
+         quit();
         }
     }
     
-    void Books:: search_books(){
+    void Books:: list_books(){
+        /*
+         * Index number
+         * Book Titles
+         * Authors
+         * No of Books Available
+         * */
+        int m {1};
+        cout<<"There are currently "<<total_num<<" books titles in the store \n";
+            for(int j{1}; j<=total_num; j++){
+                cout<<endl<<m<<"----- "<<title.at(j)<<"--- by---  "<<author.at(j)<<" ---("<<copies.at(j)<<" copies in stock)"<<endl<<endl;
+                m++;
+            }
+           display_menu();
+    }
+    
+    void Books :: add_books(){
+        int num{0}, copies_val{0};
+        double price_val{0.0};
+        string title_val{},author_val{}, publisher_val{};
         
+        cout<<"How many books will you like to add:  ";
+        cin>>num;
+        cin.ignore(1, '\n');
+        total_num+=num;
+        //The first for loop enables the user the opportunity of num inputs...
+        for(int i {0}; i < num; i++){
+                
+                cout<<endl;
+                 cout<<"Title: ";
+                 getline(cin,title_val);
+                 title.push_back(title_val);
+//                 title.at(i) = title_val; 
+                 cout<<endl;
+            
+                 cout<<"Author (Surname first): ";
+                getline(cin,author_val);
+                author.push_back(author_val);
+//                author.at(i) = author_val;
+                cout<<endl;
+            
+                cout<<"Selling Price: N ";
+                cin>>price_val;
+                price.push_back(price_val);
+//                price.at(i) = price_val;
+                cin.ignore(1, '\n');
+                
+                
+                cout<<"\nPublisher: ";
+                getline(cin, publisher_val);
+                publisher.push_back(publisher_val);
+//                publisher.at(i) = publisher_val;
+//                cin.ignore(1, '\n');
+                
+                cout<<"\nHow many copies are you adding?: ";
+                cin>>copies_val;
+                copies.push_back(copies_val);
+//                copies.at(i) = copies_val;
+                cin.ignore(1, '\n');
+                
+        }
+       display_menu();
+    }
+    
+    void Books:: search_books(){
+        string book_title{};
+        int count {0};
+        cout<<"Enter Book title (In upper case): ";
+        cin.ignore(1,'\n');
+        getline(cin,book_title);
+        
+    for(size_t r {0}; r <title.size(); r++){
+        if(title.at(r) == book_title){
+            count++;
+        }
+    }
+    if (count > 0){
+            cout<<book_title<<" is available \n";
+        }
     }
     
     void Books:: review_books(){
         
     }
+    
+    int Books::quit(){
+        cout<<"GoodBye"<<endl;
+        option = 'q';
+    }
+    
+   
 
 
 /*
