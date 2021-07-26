@@ -1,0 +1,11 @@
+ABOUT THE APP
+
+This program uses OO programming to create a Bookshop App.
+
+Features of Version 1 of "THE BOOKSHOP APP"
+
+1. You can have a digital inventory of all books currently available in your store( all the book titles and the number of copies available)
+2. You can add reviews to each of the books so as to aid customers make a choice of the books to buy
+3. Once the user inputs the number of books wanted, the total price is displayed..
+
+## There are some features of this app that have been highlighted in the main.cpp file and that will be implmented in THE BOOKSHOP APP 2.0
