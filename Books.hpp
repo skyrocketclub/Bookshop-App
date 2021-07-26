@@ -20,6 +20,7 @@ private:
     char option {};
     
 public:
+//The methods are initialised here as well... Sort of their prototypes
     void display_menu();
     void list_books();
     void add_books();
