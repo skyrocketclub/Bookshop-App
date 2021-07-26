@@ -2,20 +2,21 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <cctype>
 
 using namespace std;
-//      * list_books
-//      * add_books 
-//      * Search_books
-//      * review_books
-char option {};
 
+//All the methods that were defined in the public section are expounded upon here...
+//This method is the key to the other methods and it displays the possible operations in the home screen anytime it is called
    void Books::display_menu(){
-        cout<<"a -- Add Books\nl -- Get List of books in stock\ns -- Search for a book\nr -- Add a review to a book\nq -- Quit Application\n";
+        
+        cout<<"\na -- Add Books\nl -- Get List of books in stock\ns -- Search for a book\nq -- Quit Application\n";
+        cout<<"Option: ";
         cin>>option;
+        cout<<endl;
+        
         if (option != 'q'){
             switch (option){
-                
                 case 'l':
                 {
                     list_books();
@@ -34,21 +35,12 @@ char option {};
                     search_books();
                 }
                 break;
-                case 'r':
-                {
-                    cout<<"Relax, we are working on that feature... "<<endl;
-                }
-                break;
-                
-//                case 'q':
-//                {
-//                    quit();
-//                }
-//                break;
 
                 default:
                 {
                     cout<<"Please enter a valid option (In lower case)"<<endl;
+                    display_menu();
+//                     cin.ignore(1,'\n');
                 }
             }
         }
@@ -56,171 +48,235 @@ char option {};
          quit();
         }
     }
-    
+
+//THis method simpply gets a list of all the books currently in stock. It also states how many books are in stock
     void Books:: list_books(){
-        /*
-         * Index number
-         * Book Titles
-         * Authors
-         * No of Books Available
-         * */
         int m {1};
         cout<<"There are currently "<<total_num<<" books titles in the store \n";
             for(int j{1}; j<=total_num; j++){
-                cout<<endl<<m<<"----- "<<title.at(j)<<"--- by---  "<<author.at(j)<<" ---("<<copies.at(j)<<" copies in stock)"<<endl<<endl;
+                cout<<endl<<m<<"----- "<<title.at(j)<<"--- by---  "<<author.at(j)<<" ---("<<copies.at(j)<<" copies in stock)"<<endl;
                 m++;
             }
            display_menu();
     }
     
+    //This method when called opens up to part of the code that allows you to add new books or more copies of already existing books to the collection
     void Books :: add_books(){
-        int num{0}, copies_val{0};
+        int num{0}, copies_val{0},counts{0}, copies_to_add{0};
         double price_val{0.0};
         string title_val{},author_val{}, publisher_val{};
-        
+        size_t q{0};
         cout<<"How many books will you like to add:  ";
         cin>>num;
         cin.ignore(1, '\n');
         total_num+=num;
         //The first for loop enables the user the opportunity of num inputs...
-        for(int i {0}; i < num; i++){
-                
-                cout<<endl;
-                 cout<<"Title: ";
-                 getline(cin,title_val);
-                 title.push_back(title_val);
-//                 title.at(i) = title_val; 
+                 for(int i {0}; i < num; i++){
+                 bookline:cout<<"\n\t\tBook "<<i+1; 
                  cout<<endl;
-            
+                 cout<<"Title (Ensure complete and accurate input): ";
+                 getline(cin,title_val);
+                 title_val = capitalise(title_val);
+               
+  //If the book is already in stock, only the number of books to be added is taken from the user...
+                  for(size_t r {0}; r <title.size(); r++){
+                        if(title.at(r) == title_val){
+                            counts++;
+                            q = r;
+                        }
+                    }
+                 
+                if (counts > 0){
+                     cout<<copies.at(q)<<" copies of "<<title_val<<" are in stock \nHow many copies would you like to add?: ";
+                     cin>>copies_to_add;
+                     copies.at(q)+=copies_to_add;
+                     cout<<"Input Recorded!\n"; 
+                     total_num-=1;
+                     counts=0;
+                     cin.ignore(1,'\n');
+                     continue;
+                }
+                 else{
+                            title.push_back(title_val);
+                 }
+                 
+                 reviews.push_back("No reviews yet... ");
+
                  cout<<"Author (Surname first): ";
                 getline(cin,author_val);
+                author_val = capitalise(author_val);
                 author.push_back(author_val);
-//                author.at(i) = author_val;
-                cout<<endl;
             
                 cout<<"Selling Price: N ";
                 cin>>price_val;
                 price.push_back(price_val);
-//                price.at(i) = price_val;
                 cin.ignore(1, '\n');
                 
                 
-                cout<<"\nPublisher: ";
+                cout<<"Publisher: ";
                 getline(cin, publisher_val);
                 publisher.push_back(publisher_val);
-//                publisher.at(i) = publisher_val;
-//                cin.ignore(1, '\n');
+
                 
-                cout<<"\nHow many copies are you adding?: ";
+                cout<<"How many copies are you adding?: ";
                 cin>>copies_val;
                 copies.push_back(copies_val);
-//                copies.at(i) = copies_val;
                 cin.ignore(1, '\n');
-                
+                cout<<endl;
         }
        display_menu();
     }
     
+    //This is the most elaborated method in this code, although it is subject to review in the second version...
+    //In this section, you can buy a book, or even add reviews to books...
     void Books:: search_books(){
-        string book_title{};
+        string book_title{}, review{};
         int count {0};
-        cout<<"Enter Book title (In upper case): ";
+        size_t p{0}, copys{0};
+        double net_cost {0.0};
+        cout<<"Enter Book title (ensure complete & accurate input): ";
         cin.ignore(1,'\n');
         getline(cin,book_title);
+        book_title = capitalise(book_title);
+        char choice{}, s_choice{}, buy_choice{};
         
     for(size_t r {0}; r <title.size(); r++){
         if(title.at(r) == book_title){
             count++;
+            p = r;
         }
     }
     if (count > 0){
             cout<<book_title<<" is available \n";
+
+// *      b. Add review to the book
+// *                  Find a way so that the default review for all the books is "No Review has been added at the moment"
+                cout<<"a -- Buy the book\nb -- Add review of the book\nc -- Read Review of the book\nOption: ";
+                cin>>choice;
+                cout<<endl;
+                switch (choice){
+                  buy: case 'a':
+                    {
+                            cout<<"How many copies? : ";
+                            cin>>copys;
+                            if (copies.at(p) == 0){
+                                cout<<"Sorry, "<<title.at(p)<<" is out of stock "<<endl;
+                            }
+                            else if ( copys > copies.at(p)){
+                                cout<<"Sorry, only "<<copies.at(p)<<" copies are available "<<endl;
+                                display_menu();
+                            }
+                            else{
+                                cout<<"Total Cost: N "<<copys*price.at(p)<<"\nDO you wish to continue this transaction? ";
+                                cout<<"\n1 -- Yes\n2 -- No\nChoice: ";
+                                cin>>buy_choice;
+                                switch (buy_choice){
+                                    case '1':
+                                    {
+                                        cout<<"Thank you for your patronage\n";
+                                        copies.at(p)-=copys;
+                                        display_menu();
+                                    }
+                                    break;
+                                    case '2':
+                                    {
+                                        cout<<" Okay, Check out other books before you go!\n";
+                                        display_menu();
+                                    }
+                                    break;
+                                    default:
+                                    {
+                                        cout<<"Invalid Option entered! ";
+                                        display_menu();
+                                    }
+                                }
+                            }
+                    }
+                    break;
+                    
+                    case 'b':
+                    {
+                        cout<<"Kindly Input your review below:\n";
+                        cin.ignore(1,'\n');
+                        getline(cin,review);
+                        reviews.at(p) = review;
+                        cout<<"Thank you! Your review has been recorded!"<<endl;
+                        display_menu();
+                    }
+                    break;
+                    
+                    case 'c':
+                    {
+                        cout<<"\nReview: "<<reviews.at(p)<<endl;
+                        decision: cout<<"1 -- Buy the book\n2 -- Search for another book\n3 -- Return to the main menu\nOption: ";
+                        cin>>s_choice;
+                        switch(s_choice){
+                            case '1':
+                            {
+                                goto buy;
+                            }
+                            break;
+                            case '2':
+                            {
+                                search_books();
+                            }
+                            break;
+                            case '3':
+                            {
+                                display_menu();
+                            }
+                            break;
+                            default:
+                            {
+                                cout<<"Please input a valid option\n";
+                                goto decision;
+                            }
+                        }
+                    }
+                    break;
+                    
+                    default:
+                    {
+                        cout<<"Please enter a valid option";
+                        display_menu();
+                    }
+                }
+        }
+        else{
+            cout<<book_title<<" is not available\n";
+            display_menu();
         }
     }
     
-    void Books:: review_books(){
-        
-    }
     
     int Books::quit(){
         cout<<"GoodBye"<<endl;
         option = 'q';
     }
     
+    string Books :: capitalise (string input){
+        string reform{};
+        for (auto letters : input){
+            letters = toupper(letters);
+            reform+=letters;
+        }
+        input = reform;
+        return input;
+    }
    
-
-
-/*
- * List of books include:
- * Author
- * Title
- * Price
- * Publisher
- * Stock Position..
- * 
- * 
- * When a customer wants a book, the sales person inputs the title and author 
- * The code searches and displays if the book is available or not...
- *If it is not available, an appropriate message is displayed...
- * If it is, and the required copies are available
- * 
- * Use a class called books with suitable member functions and constructors
- * Also look at the possibility of using the new operator to create spaces for the books and deleting them when due.
- * *****************************************************************************************************************************************************************************************************************************************************************
- *                         <  Layout of the Program  >       
- *                                      HOME MENU
- * What would you like to do? Press the "Digit" of your choice
- * 
- * 1.  GET LIST OF ALL BOOKS AVAILABLE
-            if you do this, all the BOOK TITLES in store will be outputed alongside their AUTHORS and how many COPIES of the books are available
-    2.  ADD NEW STOCK
-     *      if you do this, an interctive window then asks you for:
-     *          a. The title all in capital letters
-     *          b. The Author Surname first
-     *          c. The publisher of the book
-     *          d. How many books you would lke to add
-     *          e. The selling price of the books
-     3.   SEARCH FOR A BOOK
-      *         This is to display if  a book is available or not...
-                Here an interactive window opens and some information are requested from the user:
-                 *      1. Title of the book "In Capital Letters"
-                 *      2. Author of the book
-                 *      3. How many copies of the book is required???
-                 * 
-                 * Then the program searches for the book and if the book is available, the program outputs 
-                 * The Status:
-                 * The Total Price of all the copies that are to be purchased...
-     4.     ADD REVIEWS OF THE BOOKS. (If the book is available then add the review)>>>>>>>>>>>
-     5.     QUIT 
-      * 
-      * 
-      *                                                             HOW TO GO ABOUT THE PROGRAM
-      * 
-      * Use class called books with suitable member functions and constructors
-      * 
-      * STEPS
-      * 1. Create The class called Books
-      * ##Header FIle
-      * attributes to be in Private:
-      * The things in Private will be in form of vectors...
- *  Author
- * Title
- * Price
- * Publisher
- * Stock Position..
-      * Method Prototypes to be included in Public....
-      * Functions:
-      * These functions and methods will be making use of the attributes in the private since they are members of the class...
-      *     1. Add books
-      *     2. Get List of all Books available
-      *     3. Add Review
-      *     4. Then The constructor That looks for a book............
-      * 
-      * ##Cpp File
-      * Functions to be elaborated on in the Cpp file
-      * 
-      * 
-      * ##Main
-      * 
-      * 
- * */
+   
+    /*
+  *                                 THINGS TO IMPLEMENT IN THE NEXT VERSION OF "THE BOOKSHOP APP"
+  * 1.  I can search for books using :the author-----the title--------the book number: and the same options of buying or reviewing 
+  * the book come up
+  * 2.  After i see that the number of books are not enough, the user can be given options to either
+  *             Buy a different number of units
+  *             Search for another book
+  *             return to home
+  * 3. Implement exception handling for all the places where the user has to enter input... And test all
+  * 4. Extract a method called SEARCH  and have another method called BUY that have tailored and specific functions
+  * 5. Expound on the buying  method keeping in mind that a cutomer can want to buy more than one book at once and this
+  *     is often the case...
+  * 6. Create a feature that alerts the librarian on the Books that are currently getting out of stock or that are out of stock completely...
+  * 
+  * */
